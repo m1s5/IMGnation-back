@@ -1,0 +1,253 @@
+---
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: m1s5
+      changes:
+        - createTable:
+            tableName: Users
+            columns:
+              - column:
+                  name: user_id
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: login
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: pass_hash
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+        - addPrimaryKeyConstraint:
+            tableName: Users
+            columnNames: user_id
+            constraintName: pk_user__users
+
+        - createTable:
+            tableName: Roles
+            columns:
+              - column:
+                  name: role_id
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+                    unique: true
+        - addPrimaryKeyConstraint:
+            tableName: Roles
+            columnNames: role_id
+            constraintName: pk_role_id__roles
+
+        - createTable:
+            tableName: Pictures
+            columns:
+              - column:
+                  name: picture_id
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: picture
+                  type: blob
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: clob
+              - column:
+                  name: picture_datetime
+                  type: datetime
+                  constraints:
+                    nullable: false
+        - addPrimaryKeyConstraint:
+            tableName: Pictures
+            columnNames: picture_id
+            constraintName: pk_picture_id__pictures
+
+  - changeSet:
+      id: 2
+      author: m1s5
+      changes:
+
+        - createTable:
+            tableName: Users_Roles
+            columns:
+              - column:
+                  name: user_id
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: role_id
+                  type: int
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseColumnNames: user_id
+            baseTableName: Users_Roles
+            constraintName: fk_user_id
+            onDelete: CASCADE
+            onUpdate: RESTRICT
+            referencedColumnNames: user_id
+            referencedTableName: Users
+        - addForeignKeyConstraint:
+            baseColumnNames: role_id
+            baseTableName: Users_Roles
+            constraintName: fk_role_id
+            onDelete: CASCADE
+            onUpdate: RESTRICT
+            referencedColumnNames: role_id
+            referencedTableName: Roles
+        - addPrimaryKeyConstraint:
+            tableName: Users_Roles
+            columnNames: user_id, role_id
+            constraintName: pk_user_role_id__users_roles
+
+        - createTable:
+            tableName: Users_Avatars
+            columns:
+              - column:
+                  name: user_id
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: picture_id
+                  type: int
+                  constraints:
+                    nullable: false
+                    unique: true
+        - addPrimaryKeyConstraint:
+            tableName: Users_Avatars
+            columnNames: user_id
+            constraintName: pk_user_id__users_avatars
+        - addForeignKeyConstraint:
+            baseColumnNames: user_id
+            baseTableName: Users_Avatars
+            constraintName: fk_user_id__users_avatars
+            onDelete: CASCADE
+            onUpdate: RESTRICT
+            referencedColumnNames: user_id
+            referencedTableName: Users
+        - addForeignKeyConstraint:
+            baseColumnNames: picture_id
+            baseTableName: Users_Avatars
+            constraintName: fk_picture_id__users_avatars
+            onDelete: CASCADE
+            onUpdate: RESTRICT
+            referencedColumnNames: picture_id
+            referencedTableName: Pictures
+
+  - changeSet:
+      id: 3
+      author: m1s5
+      changes:
+
+
+        - createTable:
+            tableName: Users_Pictures
+            columns:
+              - column:
+                  name: user_id
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: picture_id
+                  type: int
+                  constraints:
+                    nullable: false
+                    unique: true
+        - addPrimaryKeyConstraint:
+            tableName: Users_Pictures
+            columnNames: user_id, picture_id
+            constraintName: pk_user_id_picture_id__users_pictures
+        - addForeignKeyConstraint:
+            baseColumnNames: user_id
+            baseTableName: Users_Pictures
+            constraintName: fk_user_id__users_pictures
+            onDelete: CASCADE
+            onUpdate: RESTRICT
+            referencedColumnNames: user_id
+            referencedTableName: Users
+        - addForeignKeyConstraint:
+            baseColumnNames: picture_id
+            baseTableName: Users_Pictures
+            constraintName: fk_picture_id__users_pictures
+            onDelete: CASCADE
+            onUpdate: RESTRICT
+            referencedColumnNames: picture_id
+            referencedTableName: Pictures
+
+  - changeSet:
+      id: 4
+      author: m1s5
+      changes:
+
+
+        - createTable:
+            tableName: Commentaries
+            columns:
+              - column:
+                  name: commentary_id
+                  type: int
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: user_id
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: picture_id
+                  type: int
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: text
+                  type: clob
+                  constraints:
+                    nullable: false
+              - column:
+                  name: commentary_datetime
+                  type: datetime
+                  constraints:
+                    nullable: false
+        - addPrimaryKeyConstraint:
+            tableName: Commentaries
+            columnNames: commetary_id
+            constraintName: pk_commentary_id__commentaries
+        - addForeignKeyConstraint:
+            baseColumnNames: user_id
+            baseTableName: Commentaries
+            constraintName: fk_user_id__commentaries
+            onDelete: CASCADE
+            onUpdate: RESTRICT
+            referencedColumnNames: user_id
+            referencedTableName: Users
+        - addForeignKeyConstraint:
+            baseColumnNames: picture_id
+            baseTableName: Commentaries
+            constraintName: fk_picture_id__commentaries
+            onDelete: CASCADE
+            onUpdate: RESTRICT
+            referencedColumnNames: picture_id
+            referencedTableName: Pictures
+...
